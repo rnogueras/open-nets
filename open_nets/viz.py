@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot(*functions, x_min=-10, x_max=10, num_points=1000, color="b-", ax=None):
-    x = np.linspace(x_min, x_max, num_points)
+def plot(*functions, x_min=-2, x_max=2, num_points=1000, color="b-", ax=None):
+    x = np.linspace(x_min, x_max, num_points)[:, None]
     z = x.copy()
 
     for f in functions:

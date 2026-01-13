@@ -9,6 +9,7 @@ class MSELoss(Layer):
         self.y_true = None
 
     def forward(self, y_pred, y_true):
+        assert y_pred.shape == y_true.shape
         self.y_pred = y_pred
         self.y_true = y_true
         return 1 / 2 * (y_pred - y_true) ** 2

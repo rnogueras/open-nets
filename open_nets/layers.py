@@ -6,44 +6,34 @@ from .base import Layer
 
 
 class Linear(Layer):
-    def __init__(self, random_init=True, verbose=True):
-        self.w = np.random.randn() if random_init else 0
-        self.b = np.random.randn() if random_init else 0
+    def __init__(self, input_size, output_size, random_init=True, verbose=False):
+        self.w = np.random.randn(input_size, output_size) if random_init else np.zeros((input_size, output_size))
+        self.b = np.random.randn(output_size) if random_init else np.zeros(output_size)
         self.x = None
 
         if verbose:
-            print(f"weight: {self.w}")
-            print(f"bias: {self.b}")
+            print(f"weights: {self.w}")
+            print(f"biases: {self.b}")
 
     def forward(self, x):
         self.x = x
-        # z = w * x + b
-        return self.w * x + self.b
+        # z = x @ w + b
+        return np.dot(x, self.w) + self.b
 
     def backward(self, grad):
         if self.x is None:
             raise RuntimeError("backward() called before forward()")
 
-        # dz/dw = d(w * x) / dw + d(b) / dw
-        #       = d(w * x) / dw + 0
-        #       = x * d(w) / dw + 0
-        #       = x * 1 + 0
-        #       = x
-        grad_w = self.x * grad
-
-        # dz/dx = d(w * x + b) / dx
-        #       = d(w * x) / dx + d(b) / dx
-        #       = d(w * x) / dx + 0
-        #       = w * d(x) / dx + 0
-        #       = w * 1 + 0
-        #       = w
-        grad_x = grad * self.w
+        # dz/dw = d(w * x + b) / dw
+        #       = x^T @ grad
+        grad_w = np.dot(self.x.T, grad)
 
         # dz/db = d(w * x + b) / db
-        #       = d(w * x) / db + d(b) / db
-        #       = 0 + d(b) / db
-        #       = 0 + 1
-        #       = 1
-        grad_b = grad * 1
+        #       = sum(grad, axis=0)
+        grad_b = np.sum(grad, axis=0)
+
+        # dz/dx = d(w * x + b) / dx
+        #       = grad @ w
+        grad_x = np.dot(grad, self.w.T)
 
         return grad_w, grad_b, grad_x
