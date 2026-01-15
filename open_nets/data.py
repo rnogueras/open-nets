@@ -3,7 +3,10 @@
 import numpy as np
 
 
-def create_dataset(size=10000, target_prob=0.5, noise_level=0.5):
+def create_dataset(
+    size: int = 10000, target_prob: float = 0.5, noise_level: float = 0.5
+) -> tuple[np.ndarray, np.ndarray]:
+    """Build synthetic dataset."""
     noise = np.random.rand(size) * noise_level
     noise = 2 * ((noise - noise.min()) / (noise.max() - noise.min())) - 1
 
@@ -17,7 +20,12 @@ def create_dataset(size=10000, target_prob=0.5, noise_level=0.5):
     return x, y
 
 
-def split_batches(x, y, batch_size=50, shuffle=False):
+def split_batches(
+    x: np.ndarray, y: np.ndarray, batch_size: int = 50, shuffle: bool = False
+) -> tuple[np.ndarray, np.ndarray]:
+    """Split input vectors into batches."""
+    assert len(x) == len(y), f"Input length mismatch: {len(x)} != {len(y)}"
+
     num_samples = x.shape[0]
     indices = np.arange(num_samples)
 

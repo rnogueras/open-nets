@@ -1,10 +1,20 @@
 """Visualization module."""
 
+from typing import Callable
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot(*functions, samples=None, x_min=-2, x_max=2, num_points=1000, ax=None, title=None, subtitle=None):
+def plot(
+    *functions: Callable,
+    samples: np.ndarray | None = None,
+    x_min: float = -2,
+    x_max: float = 2,
+    num_points: int = 1000,
+    ax: plt.Axes | None = None,
+    title=None,
+) -> plt.Axes:
+    """Plot simple or composite function."""
     x = np.linspace(x_min, x_max, num_points)[:, None]
     y = x.copy()
 
@@ -13,12 +23,12 @@ def plot(*functions, samples=None, x_min=-2, x_max=2, num_points=1000, ax=None, 
 
     if samples is not None:
         preds = samples.copy()
-        for f in functions:
-            preds = f(preds)
+        for function in functions:
+            preds = function(preds)
         ax.scatter(samples, preds, color="orange", linewidth=2, label="Samples")
 
-    for f in functions:
-        y = f(y)
+    for function in functions:
+        y = function(y)
 
     ax.plot(x, y, linewidth=2, label="Model")
     ax.axhline(y=0, color="k", linestyle="--", alpha=0.3)

@@ -6,7 +6,10 @@ from .base import Layer
 
 
 class Linear(Layer):
-    def __init__(self, input_size, output_size, random_init=True, verbose=False):
+    """Linear layer."""
+
+    def __init__(self, input_size: int, output_size: int, random_init: bool = True, verbose: bool = False) -> None:
+        """Initialize layer."""
         self.w = np.random.randn(input_size, output_size) if random_init else np.zeros((input_size, output_size))
         self.b = np.random.randn(output_size) if random_init else np.zeros(output_size)
         self.x = None
@@ -15,12 +18,14 @@ class Linear(Layer):
             print(f"weights: {self.w}")
             print(f"biases: {self.b}")
 
-    def forward(self, x):
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        """Forward pass."""
         self.x = x
         # z = x @ w + b
         return np.dot(x, self.w) + self.b
 
-    def backward(self, grad):
+    def backward(self, grad: np.ndarray) -> np.ndarray:
+        """Backward pass."""
         if self.x is None:
             raise RuntimeError("backward() called before forward()")
 
