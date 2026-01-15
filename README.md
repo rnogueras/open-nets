@@ -1,2 +1,3 @@
 # open-nets
-Open Neural Networks
+
+Neural Network training under the hood.
